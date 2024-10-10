@@ -4,7 +4,7 @@
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
-    <mat-nav-list>
+    <mat-nav-list (click)="drawer.close()">
       <a mat-list-item routerLink="home">Home</a>
       <a mat-list-item routerLink="generator">Generator</a>
       <a mat-list-item routerLink="songs">Songs</a>
