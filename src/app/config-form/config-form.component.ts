@@ -1,6 +1,6 @@
 import { TitleCasePipe } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -10,8 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { delay, merge } from 'rxjs';
 import { Scale } from 'tonal';
 import { configs } from '../configs/configs';
-import { defaultConfig } from '../configs/default-config';
 import { Config } from '../models/config.model';
+import { StorageService } from '../services/storage.service';
 import { CHORD_ARPEGGIO_TYPES, INSTRUMENTS, TONICS } from '../utils/constants';
 import { calcArpeggioNoteLengths } from '../utils/generator-utils';
 
@@ -30,7 +30,7 @@ import { calcArpeggioNoteLengths } from '../utils/generator-utils';
   templateUrl: './config-form.component.html',
   styleUrl: './config-form.component.scss',
 })
-export class ConfigFormComponent {
+export class ConfigFormComponent implements OnInit {
   @Input() btnText = 'Generate';
   @Output() onSubmit = new EventEmitter<Config>();
 
@@ -39,140 +39,144 @@ export class ConfigFormComponent {
   allTonics = TONICS;
   scales = Scale.names();
   arpeggios = CHORD_ARPEGGIO_TYPES;
-  allArpeggioNoteLengths = calcArpeggioNoteLengths(defaultConfig);
-  configForm;
+  allArpeggioNoteLengths: number[] | undefined;
+  configForm: FormGroup | undefined;
 
-  constructor(private snackBar: MatSnackBar, fb: FormBuilder) {
-    this.configForm = fb.nonNullable.group({
-      name: [defaultConfig.name, Validators.required],
-      fgInstruments: fb.nonNullable.group({
-        names: [defaultConfig.fgInstruments.names, Validators.required],
-        poolSize: [defaultConfig.fgInstruments.poolSize, Validators.required],
+  constructor(private snackBar: MatSnackBar, private fb: FormBuilder, private storageService: StorageService) {}
+
+  ngOnInit(): void {
+    const config = this.storageService.getConfig();
+    this.allArpeggioNoteLengths = calcArpeggioNoteLengths(config);
+    this.configForm = this.fb.nonNullable.group({
+      name: [config.name, Validators.required],
+      fgInstruments: this.fb.nonNullable.group({
+        names: [config.fgInstruments.names, Validators.required],
+        poolSize: [config.fgInstruments.poolSize, Validators.required],
         instrumentsPerPhraseMin: [
-          defaultConfig.fgInstruments.instrumentsPerPhraseMin,
+          config.fgInstruments.instrumentsPerPhraseMin,
           Validators.required,
         ],
         instrumentsPerPhraseMax: [
-          defaultConfig.fgInstruments.instrumentsPerPhraseMax,
+          config.fgInstruments.instrumentsPerPhraseMax,
           Validators.required,
         ],
       }),
-      bgInstruments: fb.nonNullable.group({
-        names: [defaultConfig.fgInstruments.names, Validators.required],
-        poolSize: [defaultConfig.bgInstruments.poolSize, Validators.required],
+      bgInstruments: this.fb.nonNullable.group({
+        names: [config.fgInstruments.names, Validators.required],
+        poolSize: [config.bgInstruments.poolSize, Validators.required],
         instrumentsPerPhraseMin: [
-          defaultConfig.bgInstruments.instrumentsPerPhraseMin,
+          config.bgInstruments.instrumentsPerPhraseMin,
           Validators.required,
         ],
         instrumentsPerPhraseMax: [
-          defaultConfig.bgInstruments.instrumentsPerPhraseMax,
+          config.bgInstruments.instrumentsPerPhraseMax,
           Validators.required,
         ],
       }),
-      phrase: fb.nonNullable.group({
-        poolSize: [defaultConfig.phrase.poolSize, Validators.required],
-        bpmMin: [defaultConfig.phrase.bpmMin, Validators.required],
-        bpmMax: [defaultConfig.phrase.bpmMax, Validators.required],
-        tonics: [defaultConfig.phrase.tonics, Validators.required],
-        scaleNames: [defaultConfig.phrase.scaleNames, Validators.required],
+      phrase: this.fb.nonNullable.group({
+        poolSize: [config.phrase.poolSize, Validators.required],
+        bpmMin: [config.phrase.bpmMin, Validators.required],
+        bpmMax: [config.phrase.bpmMax, Validators.required],
+        tonics: [config.phrase.tonics, Validators.required],
+        scaleNames: [config.phrase.scaleNames, Validators.required],
         measuresPerPhraseMin: [
-          defaultConfig.phrase.measuresPerPhraseMin,
+          config.phrase.measuresPerPhraseMin,
           Validators.required,
         ],
         measuresPerPhraseMax: [
-          defaultConfig.phrase.measuresPerPhraseMax,
+          config.phrase.measuresPerPhraseMax,
           Validators.required,
         ],
       }),
-      melody: fb.nonNullable.group({
+      melody: this.fb.nonNullable.group({
         noteOctaveMin: [
-          defaultConfig.melody.noteOctaveMin,
+          config.melody.noteOctaveMin,
           Validators.required,
         ],
         noteOctaveMax: [
-          defaultConfig.melody.noteOctaveMax,
+          config.melody.noteOctaveMax,
           Validators.required,
         ],
         dotsPerMeasure: [
-          defaultConfig.melody.dotsPerMeasure,
+          config.melody.dotsPerMeasure,
           Validators.required,
         ],
         symbolsPerMeasureMin: [
-          defaultConfig.melody.symbolsPerMeasureMin,
+          config.melody.symbolsPerMeasureMin,
           Validators.required,
         ],
         symbolsPerMeasureMax: [
-          defaultConfig.melody.symbolsPerMeasureMax,
+          config.melody.symbolsPerMeasureMax,
           Validators.required,
         ],
         pauseProbability: [
-          defaultConfig.melody.pauseProbability,
+          config.melody.pauseProbability,
           Validators.required,
         ],
       }),
-      chords: fb.nonNullable.group({
+      chords: this.fb.nonNullable.group({
         noteOctaveMin: [
-          defaultConfig.chords.noteOctaveMin,
+          config.chords.noteOctaveMin,
           Validators.required,
         ],
         noteOctaveMax: [
-          defaultConfig.chords.noteOctaveMax,
+          config.chords.noteOctaveMax,
           Validators.required,
         ],
         dotsPerMeasure: [
-          defaultConfig.chords.dotsPerMeasure,
+          config.chords.dotsPerMeasure,
           Validators.required,
         ],
         symbolsPerMeasureMin: [
-          defaultConfig.chords.symbolsPerMeasureMin,
+          config.chords.symbolsPerMeasureMin,
           Validators.required,
         ],
         symbolsPerMeasureMax: [
-          defaultConfig.chords.symbolsPerMeasureMax,
+          config.chords.symbolsPerMeasureMax,
           Validators.required,
         ],
         pauseProbability: [
-          defaultConfig.chords.pauseProbability,
+          config.chords.pauseProbability,
           Validators.required,
         ],
         arpeggioTypes: [
-          defaultConfig.chords.arpeggioTypes,
+          config.chords.arpeggioTypes,
           Validators.required,
         ],
         arpeggioNoteLengths: [
-          defaultConfig.chords.arpeggioNoteLengths,
+          config.chords.arpeggioNoteLengths,
           Validators.required,
         ],
       }),
-      structure: fb.nonNullable.group({
+      structure: this.fb.nonNullable.group({
         rootChildsMin: [
-          defaultConfig.structure.rootChildsMin,
+          config.structure.rootChildsMin,
           Validators.required,
         ],
         rootChildsMax: [
-          defaultConfig.structure.rootChildsMax,
+          config.structure.rootChildsMax,
           Validators.required,
         ],
         nodeChildProbability: [
-          defaultConfig.structure.nodeChildProbability,
+          config.structure.nodeChildProbability,
           Validators.required,
         ],
-        nodeLoopMin: [defaultConfig.structure.nodeLoopMin, Validators.required],
-        nodeLoopMax: [defaultConfig.structure.nodeLoopMax, Validators.required],
+        nodeLoopMin: [config.structure.nodeLoopMin, Validators.required],
+        nodeLoopMax: [config.structure.nodeLoopMax, Validators.required],
         childsPerNodeMin: [
-          defaultConfig.structure.childsPerNodeMin,
+          config.structure.childsPerNodeMin,
           Validators.required,
         ],
         childsPerNodeMax: [
-          defaultConfig.structure.childsPerNodeMax,
+          config.structure.childsPerNodeMax,
           Validators.required,
         ],
         treeDepthMin: [
-          defaultConfig.structure.treeDepthMin,
+          config.structure.treeDepthMin,
           Validators.required,
         ],
         treeDepthMax: [
-          defaultConfig.structure.treeDepthMax,
+          config.structure.treeDepthMax,
           Validators.required,
         ],
       }),
@@ -187,7 +191,7 @@ export class ConfigFormComponent {
   }
 
   private updateArpeggioNoteLenghts(): void {
-    const config = this.configForm.value as Config;
+    const config = this.configForm!.value as Config;
 
     this.allArpeggioNoteLengths =
       config.melody.dotsPerMeasure &&
@@ -196,7 +200,7 @@ export class ConfigFormComponent {
         ? calcArpeggioNoteLengths(config)
         : [];
 
-    this.configForm
+    this.configForm!
       .get('chords.arpeggioNoteLengths')!
       .setValue(this.allArpeggioNoteLengths);
 
@@ -206,7 +210,7 @@ export class ConfigFormComponent {
   }
 
   applyConfig(config: Config): void {
-    this.configForm.setValue(config, { emitEvent: false });
+    this.configForm?.setValue(config, { emitEvent: false });
   }
 
   printValues(obj: any): string {
@@ -236,6 +240,6 @@ export class ConfigFormComponent {
   }
 
   submit(): void {
-    this.onSubmit.emit(this.configForm.value as Config);
+    this.onSubmit.emit(this.configForm!.value as Config);
   }
 }
