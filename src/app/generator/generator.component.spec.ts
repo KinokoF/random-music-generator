@@ -1,0 +1,23 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { GeneratorComponent } from './generator.component';
+
+describe('GeneratorComponent', () => {
+  let component: GeneratorComponent;
+  let fixture: ComponentFixture<GeneratorComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [GeneratorComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(GeneratorComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

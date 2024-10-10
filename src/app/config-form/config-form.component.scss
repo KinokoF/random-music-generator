@@ -1,0 +1,21 @@
+.selected-config-box {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+  margin-bottom: 20px;
+}
+
+mat-accordion {
+  display: block;
+  margin-bottom: 20px;
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+.two-cols {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 20px;
+}

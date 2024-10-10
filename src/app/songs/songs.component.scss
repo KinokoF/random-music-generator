@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  padding: 20px;
+}
+
+.table-container {
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+
+// TODO: rivedere
+.mat-mdc-row:hover {
+  background-color: #2e3a3a;
+}

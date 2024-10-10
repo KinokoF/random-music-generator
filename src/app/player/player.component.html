@@ -1,0 +1,32 @@
+<div class="button-row">
+  <button mat-icon-button [color]="song?.like ? 'primary' : undefined" [matTooltip]="song?.like ? 'Unlike' : 'Like'" [disabled]="!song" (click)="likeUnlike()">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-icon-button matTooltip="Rewind" [disabled]="!song" (click)="goTo(0)">
+    <mat-icon>skip_previous</mat-icon>
+  </button>
+  <button mat-mini-fab color="primary" [disabled]="!song" (click)="playPause()">
+    <mat-icon>{{!playerData || playerData.paused ? 'play_arrow' : 'pause'}}</mat-icon>
+  </button>
+  <button mat-icon-button matTooltip="Generates another song with the current config and plays it" (click)="generate()">
+    <mat-icon>skip_next</mat-icon>
+  </button>
+  <button mat-icon-button [color]="getEndlessMode() ? 'primary' : undefined" matTooltip="Generates another song after the current one ends" (click)="toggleEndlessMode()">
+    <mat-icon>all_inclusive</mat-icon>
+  </button>
+</div>
+<div class="slider-row">
+  {{playerData?.current | time}}
+  <mat-slider [max]="song?.duration ?? 9999" step="0.001" [disabled]="!song">
+    <input matSliderThumb [value]="playerData?.current ?? 0" (dragEnd)="goTo($event.value)">
+  </mat-slider>
+  {{song?.duration | time}}
+</div>
+@if (song) {
+  <div class="title-row">
+    {{song.title}}
+    <button mat-icon-button matTooltip="Rename" (click)="rename()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+}

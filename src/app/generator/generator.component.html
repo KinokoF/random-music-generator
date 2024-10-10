@@ -1,0 +1,21 @@
+<h1>Generator</h1>
+@switch (step) {
+  @case ('CONFIG') {
+    <app-config-form (onSubmit)="generate($event)"></app-config-form>
+  }
+  @case ('LOADING') {
+    <mat-spinner></mat-spinner>
+    <div style="text-align: center;">
+      Generating...
+    </div>
+  }
+  @case ('DONE') {
+    <div style="text-align: center;">
+      <mat-icon>check_circle</mat-icon>
+      <h2>Done!</h2>
+      <p style="margin-bottom: 40px;">Song successfully generated.</p>
+      <button mat-stroked-button class="large-btn" style="margin-bottom: 40px;" routerLink="/songs">Go to Songs</button><br>
+      <button mat-button class="large-btn" (click)="back()">Back</button>
+    </div>
+  }
+}

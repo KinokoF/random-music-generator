@@ -1,0 +1,274 @@
+<div class="selected-config-box">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Preset</mat-label>
+    <mat-select #selectedConfig [value]="configs[0]">
+      @for (config of configs; track config) {
+        <mat-option [value]="config">{{config.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button mat-flat-button (click)="applyConfig(selectedConfig.value)">
+    Apply
+  </button>
+</div>
+<form [formGroup]="configForm" (ngSubmit)="submit()">
+  <mat-accordion multi>
+    <mat-expansion-panel formGroupName="fgInstruments">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Foreground instruments</mat-panel-title>
+        <mat-panel-description>{{printValues(configForm.value.fgInstruments)}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>Instruments</mat-label>
+        <mat-select #fgNames formControlName="names" multiple (openedChange)="renderSelectAll(fgNames, $event)">
+          <mat-option value="*" (click)="selectAll(fgNames)">Seleziona tutto</mat-option>
+          @for (instrument of instruments; track instrument) {
+            <mat-option [value]="instrument.name">{{instrument.friendlyName}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Pool size</mat-label>
+        <input matInput formControlName="poolSize" type="number" />
+      </mat-form-field>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Instruments per phrase (min)</mat-label>
+          <input
+            matInput
+            formControlName="instrumentsPerPhraseMin"
+            type="number"
+          />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Instruments per phrase (max)</mat-label>
+          <input
+            matInput
+            formControlName="instrumentsPerPhraseMax"
+            type="number"
+          />
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel formGroupName="bgInstruments">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Background instruments</mat-panel-title>
+        <mat-panel-description>{{printValues(configForm.value.bgInstruments)}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>Instruments</mat-label>
+        <mat-select #bgNames formControlName="names" multiple (openedChange)="renderSelectAll(bgNames, $event)">
+          <mat-option value="*" (click)="selectAll(bgNames)">Seleziona tutto</mat-option>
+          @for (instrument of instruments; track instrument) {
+            <mat-option [value]="instrument.name">{{instrument.friendlyName}}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Pool size</mat-label>
+        <input matInput formControlName="poolSize" type="number" />
+      </mat-form-field>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Instruments per phrase (min)</mat-label>
+          <input
+            matInput
+            formControlName="instrumentsPerPhraseMin"
+            type="number"
+          />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Instruments per phrase (max)</mat-label>
+          <input
+            matInput
+            formControlName="instrumentsPerPhraseMax"
+            type="number"
+          />
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel formGroupName="phrase">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Phrases</mat-panel-title>
+        <mat-panel-description>{{printValues(configForm.value.phrase)}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-form-field>
+        <mat-label>Pool size</mat-label>
+        <input matInput formControlName="poolSize" type="number" />
+      </mat-form-field>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>BPM (min)</mat-label>
+          <input matInput formControlName="bpmMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>BPM (max)</mat-label>
+          <input matInput formControlName="bpmMax" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Tonics</mat-label>
+          <mat-select #tonics formControlName="tonics" multiple (openedChange)="renderSelectAll(tonics, $event)">
+            <mat-option value="*" (click)="selectAll(tonics)">Seleziona tutto</mat-option>
+            @for (tonic of allTonics; track tonic) {
+              <mat-option [value]="tonic.name">{{tonic.friendlyName}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Scales</mat-label>
+          <mat-select #scaleNames formControlName="scaleNames" multiple (openedChange)="renderSelectAll(scaleNames, $event)">
+            <mat-option value="*" (click)="selectAll(scaleNames)">Seleziona tutto</mat-option>
+            @for (scale of scales; track scale) {
+              <mat-option [value]="scale">{{scale | titlecase}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Measure per phrase (min)</mat-label>
+          <input matInput formControlName="measuresPerPhraseMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Measure per phrase (max)</mat-label>
+          <input matInput formControlName="measuresPerPhraseMax" type="number" />
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel formGroupName="melody">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Melody</mat-panel-title>
+        <mat-panel-description>{{printValues(configForm.value.melody)}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Notes octave (min)</mat-label>
+          <input matInput formControlName="noteOctaveMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Notes octave (max)</mat-label>
+          <input matInput formControlName="noteOctaveMax" type="number" />
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <mat-label>Dots per measure</mat-label>
+        <input matInput formControlName="dotsPerMeasure" type="number" />
+      </mat-form-field>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Symbols per measure (min)</mat-label>
+          <input matInput formControlName="symbolsPerMeasureMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Symbols per measure (max)</mat-label>
+          <input matInput formControlName="symbolsPerMeasureMax" type="number" />
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <mat-label>Pause probability</mat-label>
+        <input matInput formControlName="pauseProbability" type="number" />
+      </mat-form-field>
+    </mat-expansion-panel>
+    <mat-expansion-panel formGroupName="chords">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Chords</mat-panel-title>
+        <mat-panel-description>{{printValues(configForm.value.chords)}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Notes octave (min)</mat-label>
+          <input matInput formControlName="noteOctaveMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Notes octave (max)</mat-label>
+          <input matInput formControlName="noteOctaveMax" type="number" />
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <mat-label>Dots per measure</mat-label>
+        <input matInput formControlName="dotsPerMeasure" type="number" />
+      </mat-form-field>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Symbols per measure (min)</mat-label>
+          <input matInput formControlName="symbolsPerMeasureMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Symbols per measure (max)</mat-label>
+          <input matInput formControlName="symbolsPerMeasureMax" type="number" />
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <mat-label>Pause probability</mat-label>
+        <input matInput formControlName="pauseProbability" type="number" />
+      </mat-form-field>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Arpeggio types</mat-label>
+          <mat-select #arpeggioTypes formControlName="arpeggioTypes" multiple (openedChange)="renderSelectAll(arpeggioTypes, $event)">
+            <mat-option value="*" (click)="selectAll(arpeggioTypes)">Seleziona tutto</mat-option>
+            @for (arpeggio of arpeggios; track arpeggio) {
+              <mat-option [value]="arpeggio.name">{{arpeggio.friendlyName}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Arpeggio note lengths</mat-label>
+          <mat-select #arpeggioNoteLengths formControlName="arpeggioNoteLengths" multiple (openedChange)="renderSelectAll(arpeggioNoteLengths, $event)">
+            <mat-option value="*" (click)="selectAll(arpeggioNoteLengths)">Seleziona tutto</mat-option>
+            @for (arpeggioNoteLength of allArpeggioNoteLengths; track arpeggioNoteLength) {
+              <mat-option [value]="arpeggioNoteLength">{{arpeggioNoteLength}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel formGroupName="structure">
+      <mat-expansion-panel-header>
+        <mat-panel-title>Structure</mat-panel-title>
+        <mat-panel-description>{{printValues(configForm.value.structure)}}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Root childs (min)</mat-label>
+          <input matInput formControlName="rootChildsMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Root childs (max)</mat-label>
+          <input matInput formControlName="rootChildsMax" type="number" />
+        </mat-form-field>
+      </div>
+      <mat-form-field>
+        <mat-label>Node child probability</mat-label>
+        <input matInput formControlName="nodeChildProbability" type="number" />
+      </mat-form-field>
+      <div class="two-cols">
+        <mat-form-field>
+          <mat-label>Node loop (min)</mat-label>
+          <input matInput formControlName="nodeLoopMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Node loop (max)</mat-label>
+          <input matInput formControlName="nodeLoopMax" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Childs per node (min)</mat-label>
+          <input matInput formControlName="childsPerNodeMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Childs per node (max)</mat-label>
+          <input matInput formControlName="childsPerNodeMax" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Tree depth (min)</mat-label>
+          <input matInput formControlName="treeDepthMin" type="number" />
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Tree depth (max)</mat-label>
+          <input matInput formControlName="treeDepthMax" type="number" />
+        </mat-form-field>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <div style="text-align: center;">
+    <button mat-flat-button class="large-btn" [disabled]="configForm.invalid">{{btnText}}</button>
+  </div>
+</form>

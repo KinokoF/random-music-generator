@@ -1,0 +1,32 @@
+:host {
+  display: block;
+  height: var(--player-height);
+  padding: 20px;
+  box-sizing: border-box;
+  color: white;
+  background-color: black;
+}
+
+.button-row {
+  text-align: center;
+}
+
+.slider-row {
+  display: flex;
+  align-items: center;
+}
+
+.title-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+button {
+  margin: 0 10px;
+}
+
+mat-slider {
+  width: 100%;
+  margin: 0 20px;
+}
