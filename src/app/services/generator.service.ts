@@ -43,7 +43,7 @@ export class GeneratorService {
               .pipe(map((base64) => [buffer, base64]))
           ),
           map(([buffer, base64]) => ({
-            title: faker.music.songName(),
+            title: `${faker.word.adjective()} song`,
             duration: new MIDI(buffer).duration,
             like: false,
             genConfig: config,

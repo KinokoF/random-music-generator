@@ -48,8 +48,9 @@ interface StructureConfig {
 }
 
 export interface Config {
+  id?: number;
   name: string;
-  date?: string;
+  date?: number;
   fgInstruments: InstrumentsConfig;
   bgInstruments: InstrumentsConfig;
   phrase: PhraseConfig;

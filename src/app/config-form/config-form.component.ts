@@ -1,4 +1,4 @@
-import { formatDate, TitleCasePipe } from '@angular/common';
+import { TitleCasePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { faker } from '@faker-js/faker';
 import { liveQuery } from 'dexie';
 import { delay, merge } from 'rxjs';
 import { Scale } from 'tonal';
@@ -225,13 +226,17 @@ export class ConfigFormComponent implements OnInit {
   }
 
   addToPresets(): void {
-    const defaultName = formatDate(new Date(), 'short', 'en');
+    const defaultName = `${faker.word.adjective()} preset`;
     this.dialog
       .open(PresetNameDialogComponent, { data: defaultName })
       .afterClosed()
       .subscribe((name) => {
         if (name) {
-          const config = { ...this.configForm!.value, name };
+          const config = {
+            ...this.configForm!.value,
+            name,
+            date: Date.now(),
+          };
           db.configs.add(config);
         }
       });
