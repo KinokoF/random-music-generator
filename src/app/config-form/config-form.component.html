@@ -1,7 +1,7 @@
 <div class="selected-config-box">
   <mat-form-field appearance="outline" subscriptSizing="dynamic">
     <mat-label>Preset</mat-label>
-    <mat-select #selectedConfig [value]="configs[0]">
+    <mat-select #selectedConfig [value]="configs?.[0]">
       @for (config of configs; track config) {
         <mat-option [value]="config">{{config.name}}</mat-option>
       }
@@ -270,7 +270,8 @@
       </mat-expansion-panel>
     </mat-accordion>
     <div style="text-align: center;">
-      <button mat-flat-button class="large-btn" [disabled]="configForm.invalid">{{btnText}}</button>
+      <button mat-flat-button class="large-btn" style="margin-bottom: 20px;" [disabled]="configForm.invalid">{{btnText}}</button><br>
+      <button mat-stroked-button type="button" class="large-btn" [disabled]="configForm.invalid" (click)="addToPresets()">Add to presets</button>
     </div>
   </form>
 }

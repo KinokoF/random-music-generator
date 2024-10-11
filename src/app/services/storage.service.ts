@@ -12,7 +12,8 @@ const PLAYER_DATA_KEY = 'PLAYER_DATA';
 })
 export class StorageService {
   getConfig(): Config {
-    return this.read(CONFIG_KEY, defaultConfig);
+    const defaultValue = { ...defaultConfig, name: 'Current' };
+    return this.read(CONFIG_KEY, defaultValue);
   }
 
   setConfig(config: Config): void {

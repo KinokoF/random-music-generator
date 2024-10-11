@@ -1,16 +1,24 @@
-import { TitleCasePipe } from '@angular/common';
+import { formatDate, TitleCasePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { liveQuery } from 'dexie';
 import { delay, merge } from 'rxjs';
 import { Scale } from 'tonal';
-import { configs } from '../configs/configs';
+import { db } from '../db';
 import { Config } from '../models/config.model';
+import { PresetNameDialogComponent } from '../preset-name-dialog/preset-name-dialog.component';
 import { StorageService } from '../services/storage.service';
 import { CHORD_ARPEGGIO_TYPES, INSTRUMENTS, TONICS } from '../utils/constants';
 import { calcArpeggioNoteLengths } from '../utils/generator-utils';
@@ -34,7 +42,7 @@ export class ConfigFormComponent implements OnInit {
   @Input() btnText = 'Generate';
   @Output() onSubmit = new EventEmitter<Config>();
 
-  configs = configs;
+  configs: Config[] | undefined;
   instruments = INSTRUMENTS;
   allTonics = TONICS;
   scales = Scale.names();
@@ -42,11 +50,23 @@ export class ConfigFormComponent implements OnInit {
   allArpeggioNoteLengths: number[] | undefined;
   configForm: FormGroup | undefined;
 
-  constructor(private snackBar: MatSnackBar, private fb: FormBuilder, private storageService: StorageService) {}
+  constructor(
+    private snackBar: MatSnackBar,
+    private fb: FormBuilder,
+    private storageService: StorageService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     const config = this.storageService.getConfig();
+
+    this.configs = [config];
+    liveQuery(() => db.configs.toArray()).subscribe(
+      (configs) => (this.configs = [config, ...configs])
+    );
+
     this.allArpeggioNoteLengths = calcArpeggioNoteLengths(config);
+
     this.configForm = this.fb.nonNullable.group({
       name: [config.name, Validators.required],
       fgInstruments: this.fb.nonNullable.group({
@@ -89,18 +109,9 @@ export class ConfigFormComponent implements OnInit {
         ],
       }),
       melody: this.fb.nonNullable.group({
-        noteOctaveMin: [
-          config.melody.noteOctaveMin,
-          Validators.required,
-        ],
-        noteOctaveMax: [
-          config.melody.noteOctaveMax,
-          Validators.required,
-        ],
-        dotsPerMeasure: [
-          config.melody.dotsPerMeasure,
-          Validators.required,
-        ],
+        noteOctaveMin: [config.melody.noteOctaveMin, Validators.required],
+        noteOctaveMax: [config.melody.noteOctaveMax, Validators.required],
+        dotsPerMeasure: [config.melody.dotsPerMeasure, Validators.required],
         symbolsPerMeasureMin: [
           config.melody.symbolsPerMeasureMin,
           Validators.required,
@@ -109,24 +120,12 @@ export class ConfigFormComponent implements OnInit {
           config.melody.symbolsPerMeasureMax,
           Validators.required,
         ],
-        pauseProbability: [
-          config.melody.pauseProbability,
-          Validators.required,
-        ],
+        pauseProbability: [config.melody.pauseProbability, Validators.required],
       }),
       chords: this.fb.nonNullable.group({
-        noteOctaveMin: [
-          config.chords.noteOctaveMin,
-          Validators.required,
-        ],
-        noteOctaveMax: [
-          config.chords.noteOctaveMax,
-          Validators.required,
-        ],
-        dotsPerMeasure: [
-          config.chords.dotsPerMeasure,
-          Validators.required,
-        ],
+        noteOctaveMin: [config.chords.noteOctaveMin, Validators.required],
+        noteOctaveMax: [config.chords.noteOctaveMax, Validators.required],
+        dotsPerMeasure: [config.chords.dotsPerMeasure, Validators.required],
         symbolsPerMeasureMin: [
           config.chords.symbolsPerMeasureMin,
           Validators.required,
@@ -135,28 +134,16 @@ export class ConfigFormComponent implements OnInit {
           config.chords.symbolsPerMeasureMax,
           Validators.required,
         ],
-        pauseProbability: [
-          config.chords.pauseProbability,
-          Validators.required,
-        ],
-        arpeggioTypes: [
-          config.chords.arpeggioTypes,
-          Validators.required,
-        ],
+        pauseProbability: [config.chords.pauseProbability, Validators.required],
+        arpeggioTypes: [config.chords.arpeggioTypes, Validators.required],
         arpeggioNoteLengths: [
           config.chords.arpeggioNoteLengths,
           Validators.required,
         ],
       }),
       structure: this.fb.nonNullable.group({
-        rootChildsMin: [
-          config.structure.rootChildsMin,
-          Validators.required,
-        ],
-        rootChildsMax: [
-          config.structure.rootChildsMax,
-          Validators.required,
-        ],
+        rootChildsMin: [config.structure.rootChildsMin, Validators.required],
+        rootChildsMax: [config.structure.rootChildsMax, Validators.required],
         nodeChildProbability: [
           config.structure.nodeChildProbability,
           Validators.required,
@@ -171,14 +158,8 @@ export class ConfigFormComponent implements OnInit {
           config.structure.childsPerNodeMax,
           Validators.required,
         ],
-        treeDepthMin: [
-          config.structure.treeDepthMin,
-          Validators.required,
-        ],
-        treeDepthMax: [
-          config.structure.treeDepthMax,
-          Validators.required,
-        ],
+        treeDepthMin: [config.structure.treeDepthMin, Validators.required],
+        treeDepthMax: [config.structure.treeDepthMax, Validators.required],
       }),
     });
 
@@ -200,9 +181,9 @@ export class ConfigFormComponent implements OnInit {
         ? calcArpeggioNoteLengths(config)
         : [];
 
-    this.configForm!
-      .get('chords.arpeggioNoteLengths')!
-      .setValue(this.allArpeggioNoteLengths);
+    this.configForm!.get('chords.arpeggioNoteLengths')!.setValue(
+      this.allArpeggioNoteLengths
+    );
 
     this.snackBar.open('Arpeggio note lengths updated', 'Close', {
       duration: 10 * 1000,
@@ -241,5 +222,18 @@ export class ConfigFormComponent implements OnInit {
 
   submit(): void {
     this.onSubmit.emit(this.configForm!.value as Config);
+  }
+
+  addToPresets(): void {
+    const defaultName = formatDate(new Date(), 'short', 'en');
+    this.dialog
+      .open(PresetNameDialogComponent, { data: defaultName })
+      .afterClosed()
+      .subscribe((name) => {
+        if (name) {
+          const config = { ...this.configForm!.value, name };
+          db.configs.add(config);
+        }
+      });
   }
 }
