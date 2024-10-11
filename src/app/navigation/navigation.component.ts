@@ -4,7 +4,7 @@ import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink, RouterOutlet } from '@angular/router';
@@ -37,4 +37,10 @@ export class NavigationComponent {
       map((result) => result.matches),
       shareReplay()
     );
+
+  eventuallyClose(drawer: MatSidenav): void {
+    this.breakpointObserver
+      .observe(Breakpoints.Handset)
+      .subscribe(res => res.matches && drawer.close());
+  }
 }
