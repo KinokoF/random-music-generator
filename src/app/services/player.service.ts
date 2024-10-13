@@ -22,6 +22,10 @@ import { WakeService } from './wake.service';
 })
 export class PlayerService {
   private context = new AudioContext();
+  private anal = new AnalyserNode(this.context, {
+    fftSize: 32,
+    smoothingTimeConstant: 1,
+  });
   private seq: Sequencer | undefined;
   private data$ = new BehaviorSubject<PlayerData | undefined>(undefined);
 
@@ -47,6 +51,24 @@ export class PlayerService {
       ),
     ]).subscribe(([songBuffer, sfBuffer]) => {
       const synth = new Synthetizer(this.context.destination, sfBuffer);
+      synth.connectIndividualOutputs([
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+        this.anal,
+      ]);
 
       if (songBuffer) {
         this.seq = new Sequencer([{ binary: songBuffer }], synth);
@@ -123,6 +145,10 @@ export class PlayerService {
 
   isPaused(): boolean | undefined {
     return this.seq?.paused;
+  }
+
+  getAnal(): AnalyserNode {
+    return this.anal;
   }
 
   private emitSameSongData(): void {

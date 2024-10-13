@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationComponent } from './navigation/navigation.component';
-import { PlayerComponent } from "./player/player.component";
+import { PlayerComponent } from './player/player.component';
 import { GeneratorService } from './services/generator.service';
 import { PlayerService } from './services/player.service';
+import { VisualizerService } from './services/visualizer.service';
 
 @Component({
   selector: 'app-root',
@@ -16,11 +17,13 @@ export class AppComponent implements OnInit {
 
   constructor(
     private playerService: PlayerService,
-    private generatorService: GeneratorService
+    private generatorService: GeneratorService,
+    private visualizerService: VisualizerService
   ) {}
 
   ngOnInit(): void {
     this.generatorService.init();
     this.playerService.init();
+    this.visualizerService.init();
   }
 }
