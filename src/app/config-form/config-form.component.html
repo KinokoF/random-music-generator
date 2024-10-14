@@ -1,13 +1,13 @@
 <div class="selected-config-box">
   <mat-form-field appearance="outline" subscriptSizing="dynamic">
     <mat-label>Preset</mat-label>
-    <mat-select #selectedConfig [value]="configs?.[0]">
-      @for (config of configs; track config) {
-        <mat-option [value]="config">{{config.name}}</mat-option>
+    <mat-select #selectedConfig [value]="allPresets?.[0]">
+      @for (preset of allPresets; track preset) {
+        <mat-option [value]="preset">{{preset.name}}</mat-option>
       }
     </mat-select>
   </mat-form-field>
-  <button mat-flat-button (click)="applyConfig(selectedConfig.value)">
+  <button mat-flat-button (click)="applyPreset(selectedConfig.value)">
     Apply
   </button>
 </div>

@@ -19,6 +19,7 @@ import { delay, merge } from 'rxjs';
 import { Scale } from 'tonal';
 import { db } from '../db';
 import { Config } from '../models/config.model';
+import { Preset } from '../models/preset.model';
 import { PresetNameDialogComponent } from '../preset-name-dialog/preset-name-dialog.component';
 import { StorageService } from '../services/storage.service';
 import { CHORD_ARPEGGIO_TYPES, INSTRUMENTS, TONICS } from '../utils/constants';
@@ -43,7 +44,7 @@ export class ConfigFormComponent implements OnInit {
   @Input() btnText = 'Generate';
   @Output() onSubmit = new EventEmitter<Config>();
 
-  configs: Config[] | undefined;
+  allPresets: Preset[] | undefined;
   instruments = INSTRUMENTS;
   allTonics = TONICS;
   scales = Scale.names();
@@ -60,16 +61,16 @@ export class ConfigFormComponent implements OnInit {
 
   ngOnInit(): void {
     const config = this.storageService.getConfig();
+    const configWithName = { ...config, name: 'Config' };
 
-    this.configs = [config];
-    liveQuery(() => db.configs.toArray()).subscribe(
-      (configs) => (this.configs = [config, ...configs])
+    this.allPresets = [configWithName];
+    liveQuery(() => db.presets.toArray()).subscribe(
+      (presets) => (this.allPresets = [configWithName, ...presets])
     );
 
     this.allArpeggioNoteLengths = calcArpeggioNoteLengths(config);
 
     this.configForm = this.fb.nonNullable.group({
-      name: [config.name, Validators.required],
       fgInstruments: this.fb.nonNullable.group({
         names: [config.fgInstruments.names, Validators.required],
         poolSize: [config.fgInstruments.poolSize, Validators.required],
@@ -189,8 +190,8 @@ export class ConfigFormComponent implements OnInit {
     this.snackBar.open('Arpeggio note lengths updated', 'Close');
   }
 
-  applyConfig(config: Config): void {
-    this.configForm?.setValue(config, { emitEvent: false });
+  applyPreset(preset: Preset): void {
+    this.configForm?.setValue(preset, { emitEvent: false });
   }
 
   printValues(obj: any): string {
@@ -230,12 +231,12 @@ export class ConfigFormComponent implements OnInit {
       .afterClosed()
       .subscribe((name) => {
         if (name) {
-          const config = {
+          const preset = {
             ...this.configForm!.value,
             name,
             date: Date.now(),
           };
-          db.configs.add(config);
+          db.presets.add(preset);
         }
       });
   }

@@ -9,7 +9,7 @@ export class AppDB extends Dexie {
 
   constructor() {
     super('ngdexieliveQuery');
-    this.version(5).stores({
+    this.version(6).stores({
       songs: '++id',
       presets: '++id',
     });
