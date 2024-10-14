@@ -12,7 +12,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { liveQuery } from 'dexie';
 import { db } from '../db';
-import { Config } from '../models/config.model';
+import { Preset } from '../models/preset.model';
 import { TimePipe } from '../pipes/time.pipe';
 import { PresetNameDialogComponent } from '../preset-name-dialog/preset-name-dialog.component';
 import { StorageService } from '../services/storage.service';
@@ -37,7 +37,7 @@ import { StorageService } from '../services/storage.service';
 })
 export class PresetsComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['name', 'date', 'actions'];
-  dataSource = new MatTableDataSource<Config>();
+  dataSource = new MatTableDataSource<Preset>();
 
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -48,8 +48,8 @@ export class PresetsComponent implements OnInit, AfterViewInit {
   ) {}
 
   ngOnInit(): void {
-    liveQuery(() => db.configs.toArray()).subscribe(
-      (configs) => (this.dataSource.data = configs)
+    liveQuery(() => db.presets.toArray()).subscribe(
+      (presets) => (this.dataSource.data = presets)
     );
   }
 
@@ -62,24 +62,25 @@ export class PresetsComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  rename(config: Config): void {
+  rename(preset: Preset): void {
     this.dialog
-      .open(PresetNameDialogComponent, { data: config.name })
+      .open(PresetNameDialogComponent, { data: preset.name })
       .afterClosed()
       .subscribe((name) => {
         if (name) {
-          db.configs.update(config, { name });
+          db.presets.update(preset, { name });
         }
       });
   }
 
-  use(config: Config): void {
+  use(preset: Preset): void {
+    const config = { ...preset, id: undefined, name: undefined, date: undefined };
     this.storageService.setConfig(config);
     this.snackBar.open('Config updated', 'Close');
   }
 
-  export(config: Config): void {
-    const woutId = { ...config, id: undefined };
+  export(preset: Preset): void {
+    const woutId = { ...preset, id: undefined };
     const json = JSON.stringify(woutId);
     const base64 = btoa(json);
     navigator.clipboard
@@ -87,23 +88,23 @@ export class PresetsComponent implements OnInit, AfterViewInit {
       .then(() => this.snackBar.open('Copied to clipboard', 'Close'));
   }
 
-  delete(config: Config): void {
-    db.configs.delete(config.id!);
+  delete(preset: Preset): void {
+    db.presets.delete(preset.id!);
   }
 
   import(): void {
-    const base64 = prompt('Enter the config string');
+    const base64 = prompt('Enter the preset string');
 
     if (base64) {
       const json = atob(base64);
-      const config = JSON.parse(json);
-      db.configs
-        .add(config)
+      const preset = JSON.parse(json);
+      db.presets
+        .add(preset)
         .then(() => this.snackBar.open('Preset imported', 'Close'));
     }
   }
 
   deleteAll(): void {
-    db.configs.clear().then(() => db.populate());
+    db.presets.clear().then(() => db.populate());
   }
 }
