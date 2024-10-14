@@ -191,7 +191,7 @@ export class ConfigFormComponent implements OnInit {
   }
 
   applyPreset(preset: Preset): void {
-    this.configForm?.setValue(preset, { emitEvent: false });
+    this.configForm?.patchValue(preset, { emitEvent: false });
   }
 
   printValues(obj: any): string {
