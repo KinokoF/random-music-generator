@@ -1,6 +1,6 @@
-import { Config } from '../models/config.model';
+import { Preset } from '../models/preset.model';
 
-export const secondConfig: Config = {
+export const SECOND_PRESET: Preset = {
   name: 'Second',
   fgInstruments: {
     names: [

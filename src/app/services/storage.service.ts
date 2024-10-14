@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { defaultConfig } from '../configs/default-config';
+import { DEFAULT_PRESET } from '../default-presets/default-preset';
 import { Config } from '../models/config.model';
 import { PlayerData } from '../models/player-data.model';
 
@@ -12,7 +12,7 @@ const PLAYER_DATA_KEY = 'PLAYER_DATA';
 })
 export class StorageService {
   getConfig(): Config {
-    const defaultValue = { ...defaultConfig, name: 'Current' };
+    const defaultValue = { ...DEFAULT_PRESET, name: undefined };
     return this.read(CONFIG_KEY, defaultValue);
   }
 
