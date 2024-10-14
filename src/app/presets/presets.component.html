@@ -27,7 +27,7 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (dblclick)="use(row)"></tr>
 
     <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell" colspan="6">No data matching the filter "{{input.value}}"</td>
@@ -36,12 +36,15 @@
 </div>
 
 <div style="text-align: center;">
+  <button mat-stroked-button class="large-btn" style="margin-bottom: 20px;" (click)="import()">Import</button><br>
   <button mat-stroked-button class="large-btn" (click)="deleteAll()">Reset</button>
 </div>
 
 <mat-menu #appMenu="matMenu">
   <ng-template matMenuContent let-row="row">
     <button mat-menu-item (click)="rename(row)">Rename</button>
+    <button mat-menu-item (click)="use(row)">Use as config</button>
+    <button mat-menu-item (click)="export(row)">Export</button>
     <button mat-menu-item (click)="delete(row)">Delete</button>
   </ng-template>
 </mat-menu>

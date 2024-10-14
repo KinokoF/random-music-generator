@@ -130,7 +130,7 @@ export class SongsComponent implements OnInit, AfterViewInit {
         },
         error: (error) => {
           this.loading.hide();
-          this.snackBar.open(error.message, 'Close', { duration: 10 * 1000 });
+          this.snackBar.open(error.message, 'Close');
         },
       });
   }

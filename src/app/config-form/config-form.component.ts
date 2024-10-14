@@ -186,9 +186,7 @@ export class ConfigFormComponent implements OnInit {
       this.allArpeggioNoteLengths
     );
 
-    this.snackBar.open('Arpeggio note lengths updated', 'Close', {
-      duration: 10 * 1000,
-    });
+    this.snackBar.open('Arpeggio note lengths updated', 'Close');
   }
 
   applyConfig(config: Config): void {

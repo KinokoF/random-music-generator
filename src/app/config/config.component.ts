@@ -19,6 +19,6 @@ export class ConfigComponent {
 
   save(config: Config): void {
     this.storageService.setConfig(config);
-    this.snackBar.open('Config saved', 'Close', { duration: 10 * 1000 });
+    this.snackBar.open('Config saved', 'Close');
   }
 }

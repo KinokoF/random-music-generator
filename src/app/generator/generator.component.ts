@@ -51,7 +51,7 @@ export class GeneratorComponent {
         },
         error: (error) => {
           this.step = 'CONFIG';
-          this.snackBar.open(error.message, 'Close', { duration: 10 * 1000 });
+          this.snackBar.open(error.message, 'Close');
         },
       });
   }

@@ -82,7 +82,7 @@ export class PlayerComponent implements OnInit {
         },
         error: (error) => {
           this.loading.hide();
-          this.snackBar.open(error.message, 'Close', { duration: 10 * 1000 });
+          this.snackBar.open(error.message, 'Close');
         },
       });
   }
