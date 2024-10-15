@@ -46,8 +46,9 @@ export class VisualizerService {
     if (this.vertex && this.fragment) {
       this.lastAnalValues = [];
 
-      this.renderer = new WebGLRenderer({ antialias: true, canvas });
+      this.renderer = new WebGLRenderer({ canvas, antialias: true });
       this.resize(canvas.clientWidth, canvas.clientHeight);
+      this.renderer.setPixelRatio(devicePixelRatio);
       this.renderer.setClearAlpha(0);
 
       this.camera = new PerspectiveCamera();
