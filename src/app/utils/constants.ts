@@ -14,7 +14,7 @@ export const FEATURES: Feature[] = [
   { name: 'Fancy visualizer', rmg: 'YES', udio: 'NO', spotify: 'NO' },
   { name: 'Open source', rmg: 'YES', udio: 'NO', spotify: 'NO' },
   { name: 'Low CO²/song', rmg: 'YES', udio: 'NO', spotify: 'NO' },
-  { name: 'Plant trees', rmg: 'YES', udio: 'NO', spotify: 'NO' },
+  { name: 'Plants trees', rmg: 'YES', udio: 'NO', spotify: 'NO' },
 ];
 
 export const TONICS = [
