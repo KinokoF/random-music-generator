@@ -5,8 +5,15 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, Ma
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
+interface DialogData {
+  title: string;
+  fieldLabel: string;
+  fieldValue: any;
+  btnText: string;
+}
+
 @Component({
-  selector: 'app-preset-name-dialog',
+  selector: 'app-prompt-dialog',
   standalone: true,
   imports: [
     MatFormFieldModule,
@@ -18,9 +25,9 @@ import { MatInputModule } from '@angular/material/input';
     MatDialogActions,
     MatDialogClose,
   ],
-  templateUrl: './preset-name-dialog.component.html',
-  styleUrl: './preset-name-dialog.component.scss'
+  templateUrl: './prompt-dialog.component.html',
+  styleUrl: './prompt-dialog.component.scss'
 })
-export class PresetNameDialogComponent {
-  readonly name = inject<string>(MAT_DIALOG_DATA);
+export class PromptDialogComponent {
+  readonly data = inject<DialogData>(MAT_DIALOG_DATA);
 }

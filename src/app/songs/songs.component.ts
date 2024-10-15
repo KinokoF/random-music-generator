@@ -15,7 +15,7 @@ import { switchMap } from 'rxjs';
 import { db } from '../db';
 import { Song } from '../models/song.model';
 import { TimePipe } from '../pipes/time.pipe';
-import { RenameDialogComponent } from '../rename-dialog/rename-dialog.component';
+import { PromptDialogComponent } from '../prompt-dialog/prompt-dialog.component';
 import { Base64Service } from '../services/base64.service';
 import { LoadingService } from '../services/loading.service';
 import { PlayerService } from '../services/player.service';
@@ -104,7 +104,14 @@ export class SongsComponent implements OnInit, AfterViewInit {
 
   rename(song: Song): void {
     this.dialog
-      .open(RenameDialogComponent, { data: song.title })
+      .open(PromptDialogComponent, {
+        data: {
+          title: 'Rename',
+          fieldLabel: 'Title',
+          fieldValue: song.title,
+          btnText: 'Save',
+        },
+      })
       .afterClosed()
       .subscribe((title) => {
         if (title) {

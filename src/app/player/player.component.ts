@@ -11,7 +11,7 @@ import { db } from '../db';
 import { PlayerData } from '../models/player-data.model';
 import { Song } from '../models/song.model';
 import { TimePipe } from '../pipes/time.pipe';
-import { RenameDialogComponent } from '../rename-dialog/rename-dialog.component';
+import { PromptDialogComponent } from '../prompt-dialog/prompt-dialog.component';
 import { GeneratorService } from '../services/generator.service';
 import { LoadingService } from '../services/loading.service';
 import { PlayerService } from '../services/player.service';
@@ -98,7 +98,14 @@ export class PlayerComponent implements OnInit {
 
   rename(): void {
     this.dialog
-      .open(RenameDialogComponent, { data: this.song!.title })
+      .open(PromptDialogComponent, {
+        data: {
+          title: 'Rename',
+          fieldLabel: 'Title',
+          fieldValue: this.song!.title,
+          btnText: 'Save',
+        },
+      })
       .afterClosed()
       .subscribe((title) => {
         if (title) {

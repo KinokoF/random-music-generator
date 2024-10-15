@@ -20,7 +20,7 @@ import { Scale } from 'tonal';
 import { db } from '../db';
 import { Config } from '../models/config.model';
 import { Preset } from '../models/preset.model';
-import { PresetNameDialogComponent } from '../preset-name-dialog/preset-name-dialog.component';
+import { PromptDialogComponent } from '../prompt-dialog/prompt-dialog.component';
 import { StorageService } from '../services/storage.service';
 import { CHORD_ARPEGGIO_TYPES, INSTRUMENTS, TONICS } from '../utils/constants';
 import { calcArpeggioNoteLengths } from '../utils/generator-utils';
@@ -227,7 +227,14 @@ export class ConfigFormComponent implements OnInit {
   addToPresets(): void {
     const defaultName = `${faker.word.adjective()} preset`;
     this.dialog
-      .open(PresetNameDialogComponent, { data: defaultName })
+      .open(PromptDialogComponent, {
+        data: {
+          title: 'Preset name',
+          fieldLabel: 'Name',
+          fieldValue: defaultName,
+          btnText: 'Add',
+        },
+      })
       .afterClosed()
       .subscribe((name) => {
         if (name) {

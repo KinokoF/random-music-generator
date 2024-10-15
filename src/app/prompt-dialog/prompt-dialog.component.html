@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>{{data.fieldLabel}}</mat-label>
+    <input matInput [(ngModel)]="data.fieldValue" required />
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-flat-button [disabled]="!data.fieldValue" [mat-dialog-close]="data.fieldValue">
+    {{data.btnText}}
+  </button>
+</mat-dialog-actions>

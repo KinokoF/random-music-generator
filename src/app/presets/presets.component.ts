@@ -14,7 +14,7 @@ import { liveQuery } from 'dexie';
 import { db } from '../db';
 import { Preset } from '../models/preset.model';
 import { TimePipe } from '../pipes/time.pipe';
-import { PresetNameDialogComponent } from '../preset-name-dialog/preset-name-dialog.component';
+import { PromptDialogComponent } from '../prompt-dialog/prompt-dialog.component';
 import { StorageService } from '../services/storage.service';
 
 @Component({
@@ -64,7 +64,14 @@ export class PresetsComponent implements OnInit, AfterViewInit {
 
   rename(preset: Preset): void {
     this.dialog
-      .open(PresetNameDialogComponent, { data: preset.name })
+      .open(PromptDialogComponent, {
+        data: {
+          title: 'Rename',
+          fieldLabel: 'Name',
+          fieldValue: preset.name,
+          btnText: 'Save',
+        },
+      })
       .afterClosed()
       .subscribe((name) => {
         if (name) {
@@ -74,7 +81,12 @@ export class PresetsComponent implements OnInit, AfterViewInit {
   }
 
   use(preset: Preset): void {
-    const config = { ...preset, id: undefined, name: undefined, date: undefined };
+    const config = {
+      ...preset,
+      id: undefined,
+      name: undefined,
+      date: undefined,
+    };
     this.storageService.setConfig(config);
     this.snackBar.open('Config updated', 'Close');
   }

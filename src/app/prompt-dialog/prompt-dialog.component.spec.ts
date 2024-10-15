@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PresetNameDialogComponent } from './preset-name-dialog.component';
+import { PromptDialogComponent } from './prompt-dialog.component';
 
-describe('PresetNameDialogComponent', () => {
-  let component: PresetNameDialogComponent;
-  let fixture: ComponentFixture<PresetNameDialogComponent>;
+describe('PromptDialogComponent', () => {
+  let component: PromptDialogComponent;
+  let fixture: ComponentFixture<PromptDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PresetNameDialogComponent]
+      imports: [PromptDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PresetNameDialogComponent);
+    fixture = TestBed.createComponent(PromptDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
