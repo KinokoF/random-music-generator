@@ -1,6 +1,21 @@
+import { Feature } from '../models/feature.model';
 import { Instrument } from '../models/instrument.model';
 
 // TODO: riordinare
+
+export const FEATURES: Feature[] = [
+  { name: 'No login required', rmg: 'YES', udio: 'PARTIAL', spotify: 'NO' },
+  { name: 'Totally free', rmg: 'YES', udio: 'PARTIAL', spotify: 'PARTIAL' },
+  { name: 'Works offline', rmg: 'YES', udio: 'NO', spotify: 'PARTIAL' },
+  { name: 'Infinite songs', rmg: 'YES', udio: 'YES', spotify: 'NO' },
+  { name: 'No ads', rmg: 'YES', udio: 'YES', spotify: 'Paid plans only' },
+  { name: 'Download MIDI', rmg: 'YES', udio: 'NO', spotify: 'NO' },
+  { name: 'Download WAV', rmg: 'YES', udio: 'YES', spotify: 'NO' },
+  { name: 'Fancy visualizer', rmg: 'YES', udio: 'NO', spotify: 'NO' },
+  { name: 'Open source', rmg: 'YES', udio: 'NO', spotify: 'NO' },
+  { name: 'Low CO²/song', rmg: 'YES', udio: 'NO', spotify: 'NO' },
+  { name: 'Plant trees', rmg: 'YES', udio: 'NO', spotify: 'NO' },
+];
 
 export const TONICS = [
   {

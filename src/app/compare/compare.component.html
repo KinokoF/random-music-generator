@@ -7,17 +7,23 @@
 
   <ng-container matColumnDef="rmg">
     <th mat-header-cell *matHeaderCellDef> RMG </th>
-    <td mat-cell *matCellDef="let element"> {{element.rmg}} </td>
+    <td mat-cell *matCellDef="let element">
+      <app-feature-availability [value]="element.rmg"></app-feature-availability>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="udio">
     <th mat-header-cell *matHeaderCellDef> Udio </th>
-    <td mat-cell *matCellDef="let element"> {{element.udio}} </td>
+    <td mat-cell *matCellDef="let element">
+      <app-feature-availability [value]="element.udio"></app-feature-availability>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="spotify">
     <th mat-header-cell *matHeaderCellDef> Spotify </th>
-    <td mat-cell *matCellDef="let element"> {{element.spotify}} </td>
+    <td mat-cell *matCellDef="let element">
+      <app-feature-availability [value]="element.spotify"></app-feature-availability>
+    </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

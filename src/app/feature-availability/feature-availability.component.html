@@ -1,0 +1,14 @@
+@switch (value) {
+  @case ('YES') {
+    <mat-icon color="primary">check</mat-icon>
+  }
+  @case ('PARTIAL') {
+    <mat-icon>check</mat-icon>*
+  }
+  @case ('NO') {
+    <mat-icon>close</mat-icon>
+  }
+  @default {
+    {{value}}
+  }
+}
