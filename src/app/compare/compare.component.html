@@ -1,2 +1,25 @@
 <h1>Compare</h1>
-<p>compare works!</p>
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z2">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="rmg">
+    <th mat-header-cell *matHeaderCellDef> RMG </th>
+    <td mat-cell *matCellDef="let element"> {{element.rmg}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="udio">
+    <th mat-header-cell *matHeaderCellDef> Udio </th>
+    <td mat-cell *matCellDef="let element"> {{element.udio}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="spotify">
+    <th mat-header-cell *matHeaderCellDef> Spotify </th>
+    <td mat-cell *matCellDef="let element"> {{element.spotify}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
