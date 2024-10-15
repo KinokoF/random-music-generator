@@ -1,27 +1,33 @@
-# RandomMusicGenerator
+# Random Music Generator 🎶
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.5.
+**Random Music Generator** is a web app that lets you create random MIDI tracks with just a few clicks. Save, listen, and download your generated tracks in both MIDI and WAV formats. Customize the music generation process with your own parameters, or choose from pre-made presets. You can even save and export these parameters to share with others!
 
-## Development server
+## Features
+- **Generate random MIDI files**: Get unique tracks every time.
+- **Save & Download**: Download your creations in MIDI or WAV format.
+- **Customizable Parameters**: Use presets or set your own parameters for a personalized touch.
+- **Parameter Saving**: Save and export your custom parameters.
+- **Built-in Visualizer**: Enjoy a simple audio visualizer while you listen.
+- **Offline Access**: Install the app for offline use and generate music anywhere!
+- **Open Source**: Feel free to explore the code, contribute, or report issues.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Tech Stack
+- **Angular**: The framework powering the app.
+- **Angular Material**: For smooth and responsive UI components.
+- **Dexie.js**: Handling local storage for your music and parameters.
 
-## Code scaffolding
+## Key Libraries
+- **random**: For generating random numbers that drive the music generation.
+- **tonal**: Managing music theory elements like scales and chords.
+- **spessasynth_lib**: Plays the MIDI files.
+- **JZZ**: For generating MIDI files.
+- **FluidR3**: Providing sound fonts for playback.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Additional Libraries
+- **Three.js**, **Faker**, and **ng-web-apis** also play smaller but helpful roles in the project.
 
-## Build
+## How to Contribute
+This project is open-source, and contributions are welcome! You can check out the code in the repository, make suggestions, or submit pull requests. Whether you're fixing a bug or adding a new feature, your help is appreciated!
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Contact
+Have questions, suggestions, or ideas? Feel free to reach out to me at **kinokoeffe@outlook.com**.
