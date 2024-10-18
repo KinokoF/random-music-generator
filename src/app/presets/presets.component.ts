@@ -105,15 +105,24 @@ export class PresetsComponent implements OnInit, AfterViewInit {
   }
 
   import(): void {
-    const base64 = prompt('Enter the preset string');
-
-    if (base64) {
-      const json = atob(base64);
-      const preset = JSON.parse(json);
-      db.presets
-        .add(preset)
-        .then(() => this.snackBar.open('Preset imported', 'Close'));
-    }
+    this.dialog
+      .open(PromptDialogComponent, {
+        data: {
+          title: 'Enter the preset string',
+          fieldLabel: 'Preset string',
+          btnText: 'Import',
+        },
+      })
+      .afterClosed()
+      .subscribe((base64) => {
+        if (base64) {
+          const json = atob(base64);
+          const preset = JSON.parse(json);
+          db.presets
+            .add(preset)
+            .then(() => this.snackBar.open('Preset imported', 'Close'));
+        }
+      });
   }
 
   deleteAll(): void {
